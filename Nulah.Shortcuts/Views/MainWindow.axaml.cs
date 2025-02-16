@@ -10,8 +10,11 @@ public partial class MainWindow : Window
 		InitializeComponent();
 	}
 
-	private void InputElement_OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+	private void FadeBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
 	{
-		this.Hide();
+		if (e.Source is Border { Name: "FadeBorder" })
+		{
+			Hide();
+		}
 	}
 }

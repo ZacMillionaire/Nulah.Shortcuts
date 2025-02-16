@@ -3,20 +3,26 @@
         xmlns:vm="using:Nulah.Shortcuts.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:shortcuts="clr-namespace:Nulah.Shortcuts.Views.Shortcuts"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
         x:Class="Nulah.Shortcuts.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Background="Transparent"
-        PointerReleased="InputElement_OnPointerReleased"
+        Background="Transparent" PointerPressed="FadeBorder_OnPointerPressed"
         Title="Nulah.Shortcuts">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowDesignModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Border x:Name="FadeBorder" Background="#33000000">
+        <Border BoxShadow="0 0 15 2 #444" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="5"
+                Background="White"
+                MaxWidth="800">
+            <shortcuts:ShortcutList DataContext="{Binding ShortcutListViewModel}" />
+        </Border>
+    </Border>
 
 </Window>

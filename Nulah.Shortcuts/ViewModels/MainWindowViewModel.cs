@@ -1,8 +1,22 @@
-﻿namespace Nulah.Shortcuts.ViewModels;
+﻿using Nulah.Shortcuts.Core;
+using ReactiveUI;
+
+namespace Nulah.Shortcuts.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-#pragma warning disable CA1822 // Mark members as static
-	public string Greeting => "Welcome to Avalonia!";
-#pragma warning restore CA1822 // Mark members as static
+	public ShortcutListViewModel ShortcutListViewModel { get; init; }
+
+	public MainWindowViewModel()
+	{
+		ShortcutListViewModel = new ShortcutListViewModel(App.GetRequiredService<ShortcutsRepository>());
+	}
+}
+
+public class MainWindowDesignModel : MainWindowViewModel
+{
+	public MainWindowDesignModel()
+	{
+		ShortcutListViewModel = new ShortcutListDesignModel();
+	}
 }

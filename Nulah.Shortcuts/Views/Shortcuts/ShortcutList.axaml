@@ -1,0 +1,34 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Nulah.Shortcuts.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:ShortcutListViewModel"
+             x:Class="Nulah.Shortcuts.Views.Shortcuts.ShortcutList">
+    <Design.DataContext>
+        <viewModels:ShortcutListDesignModel />
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto,Auto,Auto">
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Shortcuts}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="5" Background="White" Width="150" Height="150" CornerRadius="5"
+                            BorderBrush="#ededed"
+                            BorderThickness="1">
+                        <Grid RowDefinitions="Auto,*,Auto" Margin="5">
+                            <TextBlock Grid.Row="0" Text="{Binding Title}" TextWrapping="WrapWithOverflow"
+                                       HorizontalAlignment="Center" TextAlignment="Center" FontSize="16" />
+                            <TextBlock Grid.Row="2" Text="{Binding ShortcutLocation}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>
