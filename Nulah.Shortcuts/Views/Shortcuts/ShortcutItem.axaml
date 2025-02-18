@@ -1,0 +1,43 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nulah.Shortcuts.Views.Shortcuts">
+    <Design.PreviewWith>
+        <controls:ShortcutItem />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ShortcutItem">
+        <!-- Set Defaults -->
+        <Setter Property="Title" Value="Shortcut title text asdf asdf wasdf asd" />
+        <Setter Property="ShortcutContent">
+            <Template>
+                <Button>Button</Button>
+            </Template>
+        </Setter>
+        <Setter Property="ShortcutActions">
+            <Template>
+                <StackPanel Orientation="Horizontal">
+                    <Button>Button</Button>
+                </StackPanel>
+            </Template>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Margin="5" Background="White" Width="150" Height="150" CornerRadius="5"
+                        BorderBrush="#ededed"
+                        BorderThickness="1">
+                    <Grid RowDefinitions="40,*,Auto" Margin="5" MinHeight="150" MinWidth="150">
+                        <TextBlock Grid.Row="0" Text="{TemplateBinding Title}"
+                                   TextWrapping="WrapWithOverflow"
+                                   MaxWidth="130"
+                                   TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   FontSize="16" />
+                        <ContentPresenter Grid.Row="1" Content="{TemplateBinding ShortcutContent}" />
+                        <ContentPresenter Grid.Row="2" Content="{TemplateBinding ShortcutActions}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>
