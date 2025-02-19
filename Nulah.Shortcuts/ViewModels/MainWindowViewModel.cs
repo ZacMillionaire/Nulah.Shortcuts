@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Nulah.Shortcuts.Models.Interfaces;
 using ReactiveUI.SourceGenerators;
 
 namespace Nulah.Shortcuts.ViewModels;

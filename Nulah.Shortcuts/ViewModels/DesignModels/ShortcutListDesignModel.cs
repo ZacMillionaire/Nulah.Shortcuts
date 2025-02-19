@@ -2,7 +2,7 @@
 using DynamicData;
 using Nulah.Shortcuts.Domain;
 
-namespace Nulah.Shortcuts.ViewModels;
+namespace Nulah.Shortcuts.ViewModels.DesignModels;
 
 public class ShortcutListDesignModel : ShortcutListViewModel
 {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nulah.Shortcuts.Core;
 using Nulah.Shortcuts.Data;
+using Nulah.Shortcuts.Models.Interfaces;
 using Nulah.Shortcuts.ViewModels;
 using Nulah.Shortcuts.Views;
 using Nulah.Shortcuts.Views.Shortcuts;

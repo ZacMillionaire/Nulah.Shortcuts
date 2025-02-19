@@ -30,14 +30,6 @@ public class ShortcutsContext
 				})
 				.ToList();
 		});
-		return Enumerable.Range(1, 10)
-			.Select(x => new ShortcutDto()
-			{
-				Id = x,
-				Title = $"Shortcut not from database {x}",
-				ShortcutLocation = $"{x}/whatever/a/b"
-			})
-			.ToList();
 	}
 
 	private T WithConnection<T>(Func<SQLiteConnection, T> func)

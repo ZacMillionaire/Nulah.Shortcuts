@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Nulah.Shortcuts.Models.Interfaces;
 using Nulah.Shortcuts.ViewModels;
 using ReactiveUI;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using ReactiveUI;
 
-namespace Nulah.Shortcuts.ViewModels;
+namespace Nulah.Shortcuts.Models.Interfaces;
 
 public interface IViewModelInterface : IActivatableViewModel
 {

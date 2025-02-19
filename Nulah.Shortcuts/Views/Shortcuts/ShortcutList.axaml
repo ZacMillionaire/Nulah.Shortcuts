@@ -5,11 +5,12 @@
              xmlns:viewModels="clr-namespace:Nulah.Shortcuts.ViewModels"
              xmlns:shortcuts="clr-namespace:Nulah.Shortcuts.Views.Shortcuts"
              xmlns:controls="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
+             xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:ShortcutListViewModel"
              x:Class="Nulah.Shortcuts.Views.Shortcuts.ShortcutList">
     <Design.DataContext>
-        <viewModels:ShortcutListDesignModel />
+        <designModels:ShortcutListDesignModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto,Auto,Auto">
         <Border Grid.Row="0" BorderThickness="0,0,0,1"

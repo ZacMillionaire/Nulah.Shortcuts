@@ -1,8 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using Nulah.Shortcuts.ViewModels;
+﻿using Avalonia.ReactiveUI;
+using Nulah.Shortcuts.Models.Interfaces;
 using ReactiveUI;
 
 namespace Nulah.Shortcuts.Views.Shortcuts;

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nulah.Shortcuts.ViewModels;
+using Nulah.Shortcuts.Models.Interfaces;
 using ReactiveUI;
 
 namespace Nulah.Shortcuts;

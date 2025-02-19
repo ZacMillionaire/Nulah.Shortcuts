@@ -1,4 +1,5 @@
 ﻿using System;
+using Nulah.Shortcuts.Models.Interfaces;
 using ReactiveUI;
 
 namespace Nulah.Shortcuts.ViewModels;

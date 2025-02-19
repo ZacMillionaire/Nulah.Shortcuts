@@ -1,21 +1,13 @@
 using System;
-using System.IO;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nulah.Shortcuts.Core;
-using Nulah.Shortcuts.Data;
-using Nulah.Shortcuts.Domain;
 using Nulah.Shortcuts.ViewModels;
 using Nulah.Shortcuts.Views;
-using Nulah.Shortcuts.Views.Shortcuts;
 using ReactiveUI;
 using SharpHook;
 using SharpHook.Native;
@@ -24,7 +16,7 @@ using Splat;
 
 namespace Nulah.Shortcuts;
 
-public partial class App : Application
+public class App : Application
 {
 	private readonly IServiceProvider _provider;
 	private readonly ILogger<App> _logger;

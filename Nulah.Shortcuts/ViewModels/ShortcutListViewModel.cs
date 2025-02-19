@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Reactive;
 using System.Threading.Tasks;
 using DynamicData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nulah.Shortcuts.Core;
 using Nulah.Shortcuts.Domain;
+using Nulah.Shortcuts.Models.Interfaces;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
@@ -60,12 +60,12 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	{
 		if (_shortcutRepository != null)
 		{
-			_logger?.LogInformation("Loading shortcuts");
+			_logger.LogInformation("Loading shortcuts");
 			var loadedShortcuts = _shortcutRepository.GetShortcuts();
 
 			_shortcutCache.Edit(cache =>
 			{
-				_logger?.LogInformation("adding shortcuts to cache");
+				_logger.LogInformation("adding shortcuts to cache");
 				cache.Load(loadedShortcuts);
 			});
 		}
