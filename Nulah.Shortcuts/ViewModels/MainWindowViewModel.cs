@@ -7,10 +7,6 @@ using ReactiveUI.Fody.Helpers;
 
 namespace Nulah.Shortcuts.ViewModels;
 
-public interface IMainWindowViewModel : IViewModelInterface
-{
-}
-
 public class MainWindowViewModel : ViewModelBase<IMainWindowViewModel>, IMainWindowViewModel
 {
 	[Reactive]
@@ -23,13 +19,5 @@ public class MainWindowViewModel : ViewModelBase<IMainWindowViewModel>, IMainWin
 	public MainWindowViewModel(IServiceProvider serviceProvider)
 	{
 		ShortcutListViewModel = serviceProvider.GetRequiredService<IShortcutListViewModel>();
-	}
-}
-
-public class MainWindowDesignModel : MainWindowViewModel
-{
-	public MainWindowDesignModel()
-	{
-		ShortcutListViewModel = new ShortcutListDesignModel();
 	}
 }

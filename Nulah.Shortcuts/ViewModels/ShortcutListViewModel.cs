@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using DynamicData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -9,10 +8,6 @@ using Nulah.Shortcuts.Domain;
 using ReactiveUI;
 
 namespace Nulah.Shortcuts.ViewModels;
-
-public interface IShortcutListViewModel : IViewModelInterface
-{
-}
 
 public class ShortcutListViewModel : ViewModelBase<IShortcutListViewModel>, IShortcutListViewModel
 {
@@ -55,19 +50,5 @@ public class ShortcutListViewModel : ViewModelBase<IShortcutListViewModel>, ISho
 				cache.Load(loadedShortcuts);
 			});
 		}
-	}
-}
-
-public class ShortcutListDesignModel : ShortcutListViewModel
-{
-	public ShortcutListDesignModel()
-	{
-		_shortcutCache.AddOrUpdate(Enumerable.Range(1, 10)
-			.Select(x => new ShortcutDto()
-			{
-				Id = x,
-				Title = $"Shortcut not from database {x}",
-				ShortcutLocation = $"{x}/whatever/a/b"
-			}));
 	}
 }

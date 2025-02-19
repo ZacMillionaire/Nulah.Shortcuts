@@ -15,17 +15,8 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
 	private readonly ILogger _logger;
 
-	public MainWindow() : this(null)
+	public MainWindow()
 	{
-		Debugger.Launch();
-	}
-
-	public MainWindow(ILogger<MainWindow> logger)
-	{
-		Debugger.Launch();
-		_logger = logger;
-		_logger.LogInformation("Creating MainWindow");
-
 		InitializeComponent();
 
 		this.WhenActivated(disposable =>
@@ -37,7 +28,13 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 				)
 				.DisposeWith(disposable);
 		});
-		
+	}
+
+	public MainWindow(ILogger<MainWindow> logger) : this()
+	{
+		_logger = logger;
+		_logger.LogInformation("Creating MainWindow");
+
 		IsVisible = true;
 		WindowState = WindowState.Maximized;
 		CanResize = false;
@@ -47,7 +44,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 		ExtendClientAreaToDecorationsHint = true;
 
 		Closing += MainWindowOnClosing;
-		
+
 		_logger.LogInformation("MainWindow Created");
 	}
 

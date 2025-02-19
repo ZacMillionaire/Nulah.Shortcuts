@@ -9,8 +9,3 @@ public class ViewModelBase<TViewModelInterface> : ReactiveObject, IActivatableVi
 	public Type ViewModelInterface { get; } = typeof(TViewModelInterface);
 	public ViewModelActivator Activator { get; } = new();
 }
-
-public interface IViewModelInterface : IActivatableViewModel
-{
-	public Type ViewModelInterface { get; }
-}
