@@ -32,7 +32,9 @@ public partial class App : Application
 
 	private MainWindow? _mainWindow;
 
+#pragma warning disable CS8618, CS9264
 	public App(){}
+#pragma warning restore CS8618, CS9264
 	
 	public App(IServiceProvider provider, ILogger<App> logger)
 	{

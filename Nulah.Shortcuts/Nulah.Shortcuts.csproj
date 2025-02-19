@@ -23,7 +23,10 @@
         <PackageReference Include="HeroIcons.Avalonia" Version="1.0.3" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
         <PackageReference Include="ReactiveUI" Version="20.1.63" />
-        <PackageReference Include="ReactiveUI.Fody" Version="19.5.41" />
+        <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.1.8">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="SharpHook.Reactive" Version="5.3.8" />
     </ItemGroup>
 

@@ -12,7 +12,43 @@
         <viewModels:ShortcutListDesignModel />
     </Design.DataContext>
     <Grid RowDefinitions="Auto,Auto,Auto">
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding Shortcuts}">
+        <Border Grid.Row="0" BorderThickness="0,0,0,1"
+                BorderBrush="Black"
+                Background="#eee"
+                Padding="5">
+            <StackPanel Grid.IsSharedSizeScope="True" Spacing="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="Label" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Title"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                    <TextBox Grid.Column="1" Text="{Binding Title}" />
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Shortcut"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                    <TextBox Grid.Column="1" Text="{Binding Link}" />
+                </Grid>
+                <Button HorizontalAlignment="Right" 
+                        Command="{Binding CreateShortcutCommand}">
+                    Create
+                </Button>
+            </StackPanel>
+        </Border>
+        <StackPanel Grid.Row="2"
+                    IsVisible="{Binding !Shortcuts.Count}">
+            <TextBlock>No shortcuts</TextBlock>
+        </StackPanel>
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Shortcuts}"
+                      IsVisible="{Binding Shortcuts.Count}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
@@ -20,10 +56,11 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <shortcuts:ShortcutItem Title="{Binding Title}" ShortcutLink="{Binding ShortcutLocation}">
+                    <shortcuts:ShortcutItem Margin="5" Title="{Binding Title}"
+                                            ShortcutLink="{Binding ShortcutLocation}">
                         <shortcuts:ShortcutItem.ShortcutContent>
                             <StackPanel Background="Aqua">
-                                <controls:HeroIcon Type="Backspace"/>
+                                <controls:HeroIcon Type="Backspace" />
                             </StackPanel>
                         </shortcuts:ShortcutItem.ShortcutContent>
                     </shortcuts:ShortcutItem>

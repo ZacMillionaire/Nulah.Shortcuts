@@ -19,6 +19,17 @@ public class ShortcutsContext
 
 	public List<ShortcutDto> GetShortcuts()
 	{
+		return WithConnection(conn =>
+		{
+			return conn.Table<Shortcut>().Select(x => new ShortcutDto()
+				{
+					Id = x.Id,
+					Title = x.Title,
+					Type = x.Type,
+					ShortcutLocation = x.Link
+				})
+				.ToList();
+		});
 		return Enumerable.Range(1, 10)
 			.Select(x => new ShortcutDto()
 			{

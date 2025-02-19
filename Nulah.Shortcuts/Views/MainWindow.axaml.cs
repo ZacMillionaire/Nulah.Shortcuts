@@ -15,8 +15,16 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
 	private readonly ILogger _logger;
 
-	public MainWindow()
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+	public MainWindow() : this(null)
 	{
+	}
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+
+	public MainWindow(ILogger<MainWindow> logger)
+	{
+		_logger = logger;
+
 		InitializeComponent();
 
 		this.WhenActivated(disposable =>
@@ -28,12 +36,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 				)
 				.DisposeWith(disposable);
 		});
-	}
-
-	public MainWindow(ILogger<MainWindow> logger) : this()
-	{
-		_logger = logger;
-		_logger.LogInformation("Creating MainWindow");
 
 		IsVisible = true;
 		WindowState = WindowState.Maximized;
@@ -44,15 +46,12 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 		ExtendClientAreaToDecorationsHint = true;
 
 		Closing += MainWindowOnClosing;
-
-		_logger.LogInformation("MainWindow Created");
 	}
 
 	private void FadeBorder_OnPointerPressed(object? sender, PointerPressedEventArgs e)
 	{
 		if (e.Source is Border { Name: "FadeBorder" })
 		{
-			_logger.LogInformation("FadeBorder clicked");
 			// Call close so the MainWindowOnClosing handler becomes the single responsible method
 			Close();
 		}
@@ -60,7 +59,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
 	private void MainWindowOnClosing(object? sender, WindowClosingEventArgs e)
 	{
-		_logger.LogInformation("Hiding MainWindow");
 		e.Cancel = true;
 		Hide();
 	}

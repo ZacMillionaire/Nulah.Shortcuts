@@ -1,4 +1,4 @@
-﻿namespace Nulah.Shortcuts.ViewModels;
+﻿namespace Nulah.Shortcuts.ViewModels.DesignModels;
 
 public class MainWindowDesignModel : MainWindowViewModel
 {

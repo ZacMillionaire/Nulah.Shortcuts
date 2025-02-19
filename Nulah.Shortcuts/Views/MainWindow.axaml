@@ -5,6 +5,7 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:reactiveUi="http://reactiveui.net"
                   xmlns:views="clr-namespace:Nulah.Shortcuts.Views"
+                  xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
                   mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
                   x:Class="Nulah.Shortcuts.Views.MainWindow"
                   x:DataType="vm:MainWindowViewModel"
@@ -12,16 +13,23 @@
                   Background="Transparent" PointerPressed="FadeBorder_OnPointerPressed"
                   Title="Nulah.Shortcuts">
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowDesignModel />
+        <designModels:MainWindowDesignModel />
     </Design.DataContext>
 
     <Border x:Name="FadeBorder" Background="#33000000">
-        <Border BoxShadow="0 0 15 2 #444" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="5"
+        <Border BoxShadow="0 0 15 2 #444"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CornerRadius="5"
                 Background="White"
-                MaxWidth="800">
-            <reactiveUi:ViewModelViewHost x:Name="ShortcutList"/>
+                Width="800">
+            <Border x:Name="HackBorderToClipContentToRoundedCorners"
+                    ClipToBounds="True"
+                    CornerRadius="5">
+                <Grid RowDefinitions="Auto,Auto">
+                    <reactiveUi:ViewModelViewHost Grid.Row="1" x:Name="ShortcutList" />
+                </Grid>
+            </Border>
         </Border>
     </Border>
 

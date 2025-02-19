@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Reactive.Disposables;
 using Microsoft.Extensions.DependencyInjection;
-using Nulah.Shortcuts.Core;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
 
 namespace Nulah.Shortcuts.ViewModels;
 
@@ -12,9 +9,11 @@ public class MainWindowViewModel : ViewModelBase<IMainWindowViewModel>, IMainWin
 	[Reactive]
 	public IShortcutListViewModel ShortcutListViewModel { get; set; }
 
+#pragma warning disable CS8618, CS9264
 	public MainWindowViewModel()
 	{
 	}
+#pragma warning restore CS8618, CS9264
 
 	public MainWindowViewModel(IServiceProvider serviceProvider)
 	{
