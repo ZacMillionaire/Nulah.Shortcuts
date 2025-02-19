@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Linq;
 using DynamicData;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nulah.Shortcuts.Core;
 using Nulah.Shortcuts.Domain;
 using ReactiveUI;
 
 namespace Nulah.Shortcuts.ViewModels;
 
-public class ShortcutListViewModel : ViewModelBase
+public interface IShortcutListViewModel : IViewModelInterface
 {
+}
+
+public class ShortcutListViewModel : ViewModelBase<IShortcutListViewModel>, IShortcutListViewModel
+{
+	private readonly ILogger<ShortcutListViewModel> _logger;
 	private readonly ShortcutsRepository? _shortcutRepository;
 
 	protected readonly SourceCache<ShortcutDto, int> _shortcutCache = new(x => x.Id);
@@ -18,14 +24,20 @@ public class ShortcutListViewModel : ViewModelBase
 
 	public ReadOnlyObservableCollection<ShortcutDto> Shortcuts => _shortcuts;
 
-	public ShortcutListViewModel(ShortcutsRepository? shortcutRepository = null)
+	protected ShortcutListViewModel()
 	{
-		_shortcutRepository = shortcutRepository ?? App.GetRequiredService<ShortcutsRepository>();
 		_shortcutCache
 			.Connect()
 			.DeferUntilLoaded()
 			.Bind(out _shortcuts)
 			.Subscribe();
+	}
+
+	public ShortcutListViewModel(IServiceProvider serviceProvider, ILogger<ShortcutListViewModel> logger) : this()
+	{
+		_logger = logger;
+		_shortcutRepository = serviceProvider.GetRequiredService<ShortcutsRepository>();
+		_logger.LogInformation("Creating ShortcutListViewModel");
 
 		LoadShortcuts();
 	}
@@ -34,9 +46,12 @@ public class ShortcutListViewModel : ViewModelBase
 	{
 		if (_shortcutRepository != null)
 		{
+			_logger?.LogInformation("Loading shortcuts");
 			var loadedShortcuts = _shortcutRepository.GetShortcuts();
+
 			_shortcutCache.Edit(cache =>
 			{
+				_logger?.LogInformation("adding shortcuts to cache");
 				cache.Load(loadedShortcuts);
 			});
 		}
@@ -45,7 +60,7 @@ public class ShortcutListViewModel : ViewModelBase
 
 public class ShortcutListDesignModel : ShortcutListViewModel
 {
-	public ShortcutListDesignModel() : base(null)
+	public ShortcutListDesignModel()
 	{
 		_shortcutCache.AddOrUpdate(Enumerable.Range(1, 10)
 			.Select(x => new ShortcutDto()

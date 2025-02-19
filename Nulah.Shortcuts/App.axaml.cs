@@ -8,12 +8,15 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Nulah.Shortcuts.Core;
 using Nulah.Shortcuts.Data;
 using Nulah.Shortcuts.Domain;
 using Nulah.Shortcuts.ViewModels;
 using Nulah.Shortcuts.Views;
 using Nulah.Shortcuts.Views.Shortcuts;
+using ReactiveUI;
 using SharpHook;
 using SharpHook.Native;
 using SharpHook.Reactive;
@@ -23,67 +26,39 @@ namespace Nulah.Shortcuts;
 
 public partial class App : Application
 {
+	private readonly IServiceProvider _provider;
+	private readonly ILogger<App> _logger;
 	private SimpleReactiveGlobalHook? _taskPoolGlobalHook;
 
 	private MainWindow? _mainWindow;
 
+	public App(){}
+	
+	public App(IServiceProvider provider, ILogger<App> logger)
+	{
+		_provider = provider;
+		_logger = logger;
+	}
+
 	public override void Initialize()
 	{
+		_logger.LogInformation("Initialising App");
 		AvaloniaXamlLoader.Load(this);
+		_logger.LogInformation("AvaloniaXamlLoader Loaded");
 
 		// Have to do this after the loader otherwise things just won't load lol!
-		if (!Design.IsDesignMode)
-		{
-			Services();
-
-			InitMainWindow();
-
-			if (Environment.GetEnvironmentVariable("GlobalHooks") == "true")
-			{
-				// This will cause things to lag like fuck when you hit a break point so try to avoid having it enabled if possible
-				InitHooks();
-			}
-		}
-	}
-
-	private void Services()
-	{
-		var dataLocation = Path.Join(AppContext.BaseDirectory, "data");
-		Directory.CreateDirectory(dataLocation);
-
-		Locator.CurrentMutable.RegisterLazySingleton(() => new ShortcutsRepository(new ShortcutsContext(Path.Join(dataLocation, "app.db"))));
-	}
-
-	public static T GetRequiredService<T>()
-	{
-#if DEBUG
-		// We don't care if this returns null during design time
-#pragma warning disable CS8603 // Possible null reference return.
-		if (Design.IsDesignMode)
-		{
-			return default;
-		}
-#pragma warning restore CS8603 // Possible null reference return.
-#endif
-
-		return Locator.Current.GetService<T>() ?? throw new Exception($"{typeof(T)} not registered");
-	}
-
-	private void InitMainWindow()
-	{
-		_mainWindow = new MainWindow
-		{
-			IsVisible = true,
-			WindowState = WindowState.Maximized,
-			CanResize = false,
-			ShowInTaskbar = false,
-			ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome,
-			ExtendClientAreaTitleBarHeightHint = 0,
-			ExtendClientAreaToDecorationsHint = true,
-			DataContext = new MainWindowViewModel()
-		};
-
-		_mainWindow.Closing += MainWindowOnClosing;
+		// if (!Design.IsDesignMode)
+		// {
+		// 	Services();
+		//
+		// 	InitMainWindow();
+		//
+		// 	if (Environment.GetEnvironmentVariable("GlobalHooks") == "true")
+		// 	{
+		// 		// This will cause things to lag like fuck when you hit a break point so try to avoid having it enabled if possible
+		// 		InitHooks();
+		// 	}
+		// }
 	}
 
 	private void InitHooks()
@@ -95,27 +70,27 @@ public partial class App : Application
 		_taskPoolGlobalHook.RunAsync();
 	}
 
-	private void MainWindowOnClosing(object? sender, WindowClosingEventArgs e)
-	{
-		if (sender is MainWindow mainWindow)
-		{
-			e.Cancel = true;
-			mainWindow.Hide();
-		}
-	}
-
 	public override void OnFrameworkInitializationCompleted()
 	{
+		_logger.LogInformation("Framework Initilization Complete");
+
+		Locator.CurrentMutable.UnregisterCurrent(typeof(IViewLocator));
+		Locator.CurrentMutable.Register(_provider.GetRequiredService<ServiceViewLocator>, typeof(IViewLocator));
+
 		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
 		{
 			// without this the tray icon will close as soon as the right click menu is dismissed if no other window is
 			// open
 			desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-			// Only show the main window on start up if the instance was created with it set to true
+			_mainWindow = _provider.GetRequiredService<MainWindow>();
+			// the main window does not automatically locate its viewmodel so we set it once
+			_mainWindow.ViewModel = _provider.GetRequiredService<MainWindowViewModel>();
 			if (_mainWindow is { IsVisible: true })
 			{
+				_logger.LogInformation("Displaying MainWindow on startup");
 				desktop.MainWindow = _mainWindow;
+				desktop.MainWindow.BringIntoView();
 			}
 		}
 

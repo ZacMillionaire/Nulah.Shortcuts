@@ -1,15 +1,28 @@
-﻿using Nulah.Shortcuts.Core;
+﻿using System;
+using System.Reactive.Disposables;
+using Microsoft.Extensions.DependencyInjection;
+using Nulah.Shortcuts.Core;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace Nulah.Shortcuts.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public interface IMainWindowViewModel : IViewModelInterface
 {
-	public ShortcutListViewModel ShortcutListViewModel { get; init; }
+}
+
+public class MainWindowViewModel : ViewModelBase<IMainWindowViewModel>, IMainWindowViewModel
+{
+	[Reactive]
+	public IShortcutListViewModel ShortcutListViewModel { get; set; }
 
 	public MainWindowViewModel()
 	{
-		ShortcutListViewModel = new ShortcutListViewModel(App.GetRequiredService<ShortcutsRepository>());
+	}
+
+	public MainWindowViewModel(IServiceProvider serviceProvider)
+	{
+		ShortcutListViewModel = serviceProvider.GetRequiredService<IShortcutListViewModel>();
 	}
 }
 

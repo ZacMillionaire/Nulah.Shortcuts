@@ -1,7 +1,16 @@
-﻿using ReactiveUI;
+﻿using System;
+using ReactiveUI;
 
 namespace Nulah.Shortcuts.ViewModels;
 
-public class ViewModelBase : ReactiveObject
+public class ViewModelBase<TViewModelInterface> : ReactiveObject, IActivatableViewModel
+	where TViewModelInterface : class, IViewModelInterface
 {
+	public Type ViewModelInterface { get; } = typeof(TViewModelInterface);
+	public ViewModelActivator Activator { get; } = new();
+}
+
+public interface IViewModelInterface : IActivatableViewModel
+{
+	public Type ViewModelInterface { get; }
 }
