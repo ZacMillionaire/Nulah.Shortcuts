@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DynamicData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Nulah.Shortcuts.Core;
 using Nulah.Shortcuts.Domain;
 using Nulah.Shortcuts.Models.Interfaces;
@@ -14,7 +15,7 @@ namespace Nulah.Shortcuts.ViewModels;
 
 public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewModel>, IShortcutListViewModel
 {
-	private readonly ILogger<ShortcutListViewModel> _logger;
+	private readonly ILogger<ShortcutListViewModel> _logger = NullLogger<ShortcutListViewModel>.Instance;
 	private readonly ShortcutsRepository? _shortcutRepository;
 
 	protected readonly SourceCache<ShortcutDto, int> _shortcutCache = new(x => x.Id);
@@ -30,7 +31,6 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	[Reactive]
 	private string _link = string.Empty;
 
-#pragma warning disable CS8618, CS9264
 	protected ShortcutListViewModel()
 	{
 		_shortcutCache
@@ -42,18 +42,24 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 		_canCreateShortcut = this.WhenAnyValue(
 			x => x.Title,
 			x => x.Link,
-			(x, y) => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrWhiteSpace(y)
+			x => x._shortcutRepository,
+			(x, y, z) => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrWhiteSpace(y) && z is not null
 		);
-	}
-#pragma warning restore CS8618, CS9264
 
+		this.WhenActivated(async d =>
+		{
+			await Task.Delay(1000);
+			LoadShortcuts();
+			d.Dispose();
+		});
+	}
+
+	// ReSharper disable once UnusedMember.Global - Used by dependency injection
 	public ShortcutListViewModel(IServiceProvider serviceProvider, ILogger<ShortcutListViewModel> logger) : this()
 	{
 		_logger = logger;
 		_shortcutRepository = serviceProvider.GetRequiredService<ShortcutsRepository>();
 		_logger.LogInformation("Creating ShortcutListViewModel");
-
-		LoadShortcuts();
 	}
 
 	private void LoadShortcuts()
@@ -71,18 +77,20 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 		}
 	}
 
-	private int whatever = 0;
-
 	[ReactiveCommand(CanExecute = nameof(_canCreateShortcut))]
 	private async Task CreateShortcut()
 	{
-		await Task.Yield();
-		_shortcutCache.AddOrUpdate(new ShortcutDto()
+		if (_shortcutRepository is not null)
 		{
-			Id = whatever++,
-			Title = _title,
-			ShortcutLocation = _link
-		});
+			await Task.Yield();
+			_shortcutCache.AddOrUpdate(_shortcutRepository.CreateShortcut(_title, _link));
+
+			Reset();
+		}
+	}
+
+	private void Reset()
+	{
 		Title = Link = string.Empty;
 	}
 }

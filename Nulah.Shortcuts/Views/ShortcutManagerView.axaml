@@ -6,12 +6,15 @@
              xmlns:vm="clr-namespace:Nulah.Shortcuts.ViewModels"
              xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
              x:DataType="vm:ShortcutManagerViewModel"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" 
+             d:DesignWidth="1000" 
+             d:DesignHeight="800"
              x:Class="Nulah.Shortcuts.Views.ShortcutManagerView">
     <Design.DataContext>
-        <designModels:ShortcutManagerDesignModel/>
+        <designModels:ShortcutManagerDesignModel />
     </Design.DataContext>
     <Border x:Name="HackBorderToClipContentToRoundedCorners"
+            Width="800"
             ClipToBounds="True"
             CornerRadius="5">
         <Grid RowDefinitions="Auto,Auto">

@@ -16,4 +16,9 @@ public class ShortcutsRepository
 	{
 		return _context.GetShortcuts();
 	}
+
+	public ShortcutDto CreateShortcut(string title, string link)
+	{
+		return _context.CreateShortcut(title, link);
+	}
 }

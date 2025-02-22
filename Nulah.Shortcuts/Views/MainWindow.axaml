@@ -5,22 +5,22 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:reactiveUi="http://reactiveui.net"
                   xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
-                  mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="450"
+                  mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
                   x:Class="Nulah.Shortcuts.Views.MainWindow"
                   x:DataType="vm:MainWindowViewModel"
                   Icon="/Assets/avalonia-logo.ico"
-                  Background="Transparent" PointerPressed="FadeBorder_OnPointerPressed"
+                  Background="Transparent" 
+                  PointerPressed="FadeBorder_OnPointerPressed"
                   Title="Nulah.Shortcuts">
     <Design.DataContext>
         <designModels:MainWindowDesignModel />
     </Design.DataContext>
-    <Border x:Name="FadeBorder" Background="#33000000">
+    <Border x:Name="FadeBorder" 
+            Background="#33000000">
         <Border BoxShadow="0 0 15 2 #444"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                CornerRadius="5"
-                Background="White"
-                Width="800">
+                CornerRadius="5">
             <reactiveUi:ViewModelViewHost x:Name="ContentView" />
         </Border>
     </Border>

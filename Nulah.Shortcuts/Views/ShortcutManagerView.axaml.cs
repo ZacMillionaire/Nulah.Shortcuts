@@ -1,11 +1,7 @@
 ﻿using System.Reactive.Disposables;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Nulah.Shortcuts.Models.Interfaces;
 using Nulah.Shortcuts.ViewModels;
 using ReactiveUI;
 

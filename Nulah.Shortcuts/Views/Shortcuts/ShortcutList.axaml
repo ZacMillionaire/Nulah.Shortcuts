@@ -6,13 +6,14 @@
              xmlns:shortcuts="clr-namespace:Nulah.Shortcuts.Views.Shortcuts"
              xmlns:controls="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
              xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
              x:DataType="viewModels:ShortcutListViewModel"
              x:Class="Nulah.Shortcuts.Views.Shortcuts.ShortcutList">
     <Design.DataContext>
         <designModels:ShortcutListDesignModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,Auto,Auto">
+    <Grid RowDefinitions="Auto,Auto,400"
+          Background="White">
         <Border Grid.Row="0" BorderThickness="0,0,0,1"
                 BorderBrush="Black"
                 Background="#eee"
@@ -38,7 +39,7 @@
                            HorizontalAlignment="Right" />
                     <TextBox Grid.Column="1" Text="{Binding Link}" />
                 </Grid>
-                <Button HorizontalAlignment="Right" 
+                <Button HorizontalAlignment="Right"
                         Command="{Binding CreateShortcutCommand}">
                     Create
                 </Button>
@@ -48,25 +49,27 @@
                     IsVisible="{Binding !Shortcuts.Count}">
             <TextBlock>No shortcuts</TextBlock>
         </StackPanel>
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding Shortcuts}"
-                      IsVisible="{Binding Shortcuts.Count}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <shortcuts:ShortcutItem Margin="5" Title="{Binding Title}"
-                                            ShortcutLink="{Binding ShortcutLocation}">
-                        <shortcuts:ShortcutItem.ShortcutContent>
-                            <StackPanel Background="Aqua">
-                                <controls:HeroIcon Type="Backspace" />
-                            </StackPanel>
-                        </shortcuts:ShortcutItem.ShortcutContent>
-                    </shortcuts:ShortcutItem>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ScrollViewer Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding Shortcuts}"
+                          IsVisible="{Binding Shortcuts.Count}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <shortcuts:ShortcutItem Margin="5" Title="{Binding Title}"
+                                                ShortcutLink="{Binding ShortcutLocation}">
+                            <shortcuts:ShortcutItem.ShortcutContent>
+                                <StackPanel Background="Aqua">
+                                    <controls:HeroIcon Type="Backspace" />
+                                </StackPanel>
+                            </shortcuts:ShortcutItem.ShortcutContent>
+                        </shortcuts:ShortcutItem>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </UserControl>

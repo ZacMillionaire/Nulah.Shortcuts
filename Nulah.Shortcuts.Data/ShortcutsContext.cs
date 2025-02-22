@@ -1,5 +1,6 @@
 ﻿using Nulah.Shortcuts.Data.Models;
 using Nulah.Shortcuts.Domain;
+using Nulah.Shortcuts.Domain.Enums;
 using SQLite;
 
 namespace Nulah.Shortcuts.Data;
@@ -21,15 +22,38 @@ public class ShortcutsContext
 	{
 		return WithConnection(conn =>
 		{
-			return conn.Table<Shortcut>().Select(x => new ShortcutDto()
-				{
-					Id = x.Id,
-					Title = x.Title,
-					Type = x.Type,
-					ShortcutLocation = x.Link
-				})
+			return conn.Table<Shortcut>()
+				.Select(ToDto)
 				.ToList();
 		});
+	}
+
+	public ShortcutDto CreateShortcut(string title, string link)
+	{
+		return WithConnection(conn =>
+		{
+			var newShortcut = new Shortcut()
+			{
+				Title = title,
+				Link = link,
+				Type = ShortcutType.DefaultToProcessOpen
+			};
+
+			conn.Insert(newShortcut);
+
+			return ToDto(newShortcut);
+		});
+	}
+
+	private ShortcutDto ToDto(Shortcut shortcut)
+	{
+		return new ShortcutDto()
+		{
+			Title = shortcut.Title,
+			ShortcutLocation = shortcut.Link,
+			Id = shortcut.Id,
+			Type = shortcut.Type
+		};
 	}
 
 	private T WithConnection<T>(Func<SQLiteConnection, T> func)
