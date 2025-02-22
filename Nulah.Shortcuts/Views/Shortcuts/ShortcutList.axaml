@@ -79,7 +79,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <shortcuts:ShortcutItem Margin="5" Title="{Binding Title}"
+                        <shortcuts:ShortcutItem Margin="5" Width="150" Title="{Binding Title}"
                                                 ShortcutLink="{Binding ShortcutLocation}">
                             <shortcuts:ShortcutItem.ShortcutContent>
                                 <Panel Background="#E1E1E1">
@@ -91,21 +91,52 @@
                                             CommandParameter="{Binding}" />
                                     </Interaction.Behaviors>
                                     <controls:ByteArrayImage ByteArray="{Binding ImageBlob}"
-                                                             VerticalAlignment="Center" HorizontalAlignment="Center"
-                                                             Width="50" Height="50" />
+                                                             Height="100"
+                                                             Width="100"
+                                                             VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </Panel>
                             </shortcuts:ShortcutItem.ShortcutContent>
                             <shortcuts:ShortcutItem.ShortcutActions>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                                            Margin="3">
-                                    <shortcuts:ShortcutActionButton
-                                        Command="{Binding 
+                                <Grid ColumnDefinitions="Auto,Auto" HorizontalAlignment="Right" Height="30" Margin="3">
+                                    <shortcuts:ShortcutActionButton Grid.Column="0"
+                                                                    IsVisible="{Binding !DeleteClicked}"
+                                                                    Command="{Binding 
                                         $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).OpenShortcutCommand
                                         }"
-                                        CommandParameter="{Binding}">
+                                                                    CommandParameter="{Binding}">
                                         <heroIcon:HeroIcon Type="ClipboardDocument" />
                                     </shortcuts:ShortcutActionButton>
-                                </StackPanel>
+                                    <Grid Grid.Column="1" ColumnDefinitions="Auto,Auto"
+                                          VerticalAlignment="Center">
+                                        <shortcuts:ShortcutActionButton Grid.Column="0"
+                                                                        IsVisible="{Binding !DeleteClicked}"
+                                                                        Command="{Binding 
+                                                                        $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).DeleteShortcutCommand
+                                                                        }"
+                                                                        CommandParameter="{Binding}">
+                                            <heroIcon:HeroIcon Type="Trash" Foreground="Red" />
+                                        </shortcuts:ShortcutActionButton>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal"
+                                                    Spacing="5"
+                                                    IsVisible="{Binding DeleteClicked}">
+                                            <Button
+                                                Background="Red"
+                                                Command="{Binding 
+                                                $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).ConfirmDeleteShortcutCommand
+                                                }"
+                                                CommandParameter="{Binding}">
+                                                <TextBlock>Delete</TextBlock>
+                                            </Button>
+                                            <Button
+                                                Command="{Binding 
+                                                $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).CancelDeleteShortcutCommand
+                                                }"
+                                                CommandParameter="{Binding}">
+                                                <TextBlock>Cancel</TextBlock>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
                             </shortcuts:ShortcutItem.ShortcutActions>
                         </shortcuts:ShortcutItem>
                     </DataTemplate>

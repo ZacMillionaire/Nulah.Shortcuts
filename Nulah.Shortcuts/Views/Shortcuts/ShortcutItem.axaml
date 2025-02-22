@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:Nulah.Shortcuts.Views.Shortcuts">
+        xmlns:controls="using:Nulah.Shortcuts.Views.Shortcuts"
+        xmlns:controls1="clr-namespace:Nulah.Shortcuts.Controls">
     <Design.PreviewWith>
         <controls:ShortcutItem Margin="5" />
     </Design.PreviewWith>
@@ -10,8 +11,10 @@
         <Setter Property="Title" Value="Shortcut title text asdf asdf wasdf asd" />
         <Setter Property="ShortcutContent">
             <Template>
-                <Button>Button</Button>
-            </Template>
+                <Panel Background="#E1E1E1">
+                    <controls1:ByteArrayImage VerticalAlignment="Center" HorizontalAlignment="Center"
+                                             Width="50" Height="50" />
+                </Panel>            </Template>
         </Setter>
         <Setter Property="ShortcutActions">
             <Template>
@@ -22,15 +25,16 @@
         </Setter>
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Background="White" Width="150" Height="150" CornerRadius="5"
+                <Border Background="White" CornerRadius="5"
                         BorderBrush="#ededed"
                         BorderThickness="1">
-                    <Grid RowDefinitions="40,*,Auto" Margin="5" MinHeight="150" MinWidth="150">
+                    <Grid RowDefinitions="40,*,Auto">
                         <TextBlock Grid.Row="0" Text="{TemplateBinding Title}"
                                    TextWrapping="WrapWithOverflow"
-                                   MaxWidth="120"
+                                   MaxWidth="150"
                                    TextTrimming="{x:Static TextTrimming.WordEllipsis}"
                                    HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
                                    TextAlignment="Center"
                                    FontSize="16" />
                         <ContentPresenter Grid.Row="1" Content="{TemplateBinding ShortcutContent}" />

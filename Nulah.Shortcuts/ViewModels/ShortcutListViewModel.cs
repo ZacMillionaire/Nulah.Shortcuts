@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -20,12 +22,12 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	private readonly ILogger<ShortcutListViewModel> _logger = NullLogger<ShortcutListViewModel>.Instance;
 	private readonly ShortcutsRepository? _shortcutRepository;
 
-	protected readonly SourceCache<ShortcutDto, int> _shortcutCache = new(x => x.Id);
-	private readonly ReadOnlyObservableCollection<ShortcutDto> _shortcuts;
+	protected readonly SourceCache<ShortcutViewModel, int> _shortcutCache = new(x => x.Id);
+	private readonly ReadOnlyObservableCollection<ShortcutViewModel> _shortcuts;
 
 	private IObservable<bool> _canCreateShortcut;
 
-	public ReadOnlyObservableCollection<ShortcutDto> Shortcuts => _shortcuts;
+	public ReadOnlyObservableCollection<ShortcutViewModel> Shortcuts => _shortcuts;
 
 	[Reactive]
 	private string _title = string.Empty;
@@ -74,7 +76,8 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 		if (_shortcutRepository != null)
 		{
 			_logger.LogInformation("Loading shortcuts");
-			var loadedShortcuts = _shortcutRepository.GetShortcuts();
+			var loadedShortcuts = _shortcutRepository.GetShortcuts()
+				.Select(x => new ShortcutViewModel(x));
 
 			_shortcutCache.Edit(cache =>
 			{
@@ -90,7 +93,8 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 		if (_shortcutRepository is not null)
 		{
 			await Task.Yield();
-			_shortcutCache.AddOrUpdate(_shortcutRepository.CreateShortcut(_title, _link, _shortcutImage));
+			var newShortcut = _shortcutRepository.CreateShortcut(_title, _link, _shortcutImage);
+			_shortcutCache.AddOrUpdate(new ShortcutViewModel(newShortcut));
 
 			Reset();
 		}
@@ -116,7 +120,7 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 			if (files.Count == 1)
 			{
 				await using var stream = await files[0].OpenReadAsync();
-				var resized = _imageProcesor.ResizeImage(stream);
+				var resized = _imageProcesor.ResizeImage(stream,150);
 
 				ShortcutImage = resized;
 			}
@@ -124,9 +128,31 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	}
 
 	[ReactiveCommand]
-	private void OpenShortcut(ShortcutDto shortcut)
+	private void OpenShortcut(ShortcutViewModel shortcut)
 	{
-		App.GetMainWindow()?.Close();
+		if (!string.IsNullOrWhiteSpace(shortcut.ShortcutLocation))
+		{
+			//Process.Start("explorer", shortcut.ShortcutLocation);
+			App.GetMainWindow()?.Close();
+		}
+	}
+
+	[ReactiveCommand]
+	private void DeleteShortcut(ShortcutViewModel shortcut)
+	{
+		shortcut.DeleteClicked = true;
+	}
+
+	[ReactiveCommand]
+	private void ConfirmDeleteShortcut(ShortcutViewModel shortcut)
+	{
+		_shortcutCache.Remove(shortcut);
+	}
+
+	[ReactiveCommand]
+	private void CancelDeleteShortcut(ShortcutViewModel shortcut)
+	{
+		shortcut.DeleteClicked = false;
 	}
 
 	private void Reset()
