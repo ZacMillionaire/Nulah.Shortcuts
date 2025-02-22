@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Nulah.Shortcuts.ViewModels"
              xmlns:shortcuts="clr-namespace:Nulah.Shortcuts.Views.Shortcuts"
-             xmlns:controls="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
+             xmlns:heroIcon="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
              xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
+             xmlns:controls="clr-namespace:Nulah.Shortcuts.Controls"
              mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
              x:DataType="viewModels:ShortcutListViewModel"
              x:Class="Nulah.Shortcuts.Views.Shortcuts.ShortcutList">
@@ -24,7 +25,7 @@
                         <ColumnDefinition Width="Auto" SharedSizeGroup="Label" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Title"
+                    <Label Grid.Column="0" Content="Title *"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
                     <TextBox Grid.Column="1" Text="{Binding Title}" />
@@ -34,10 +35,28 @@
                         <ColumnDefinition SharedSizeGroup="Label" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Shortcut"
+                    <Label Grid.Column="0" Content="Shortcut *"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Right" />
                     <TextBox Grid.Column="1" Text="{Binding Link}" />
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition SharedSizeGroup="Label" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Icon"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Right" />
+                    <Button Grid.Column="2" Command="{Binding FilePickerCommand}"
+                            VerticalAlignment="Bottom">
+                        Select
+                    </Button>
+                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center">
+                        <controls:ByteArrayImage ByteArray="{Binding ShortcutImage}"
+                                                 Width="50" Height="50" />
+                    </Border>
                 </Grid>
                 <Button HorizontalAlignment="Right"
                         Command="{Binding CreateShortcutCommand}">
@@ -63,7 +82,9 @@
                                                 ShortcutLink="{Binding ShortcutLocation}">
                             <shortcuts:ShortcutItem.ShortcutContent>
                                 <StackPanel Background="Aqua">
-                                    <controls:HeroIcon Type="Backspace" />
+                                    <controls:ByteArrayImage ByteArray="{Binding ImageBlob}"
+                                                             Width="50" Height="50" />
+                                    <heroIcon:HeroIcon Type="Backspace" />
                                 </StackPanel>
                             </shortcuts:ShortcutItem.ShortcutContent>
                         </shortcuts:ShortcutItem>

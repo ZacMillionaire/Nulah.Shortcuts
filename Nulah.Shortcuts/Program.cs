@@ -45,6 +45,8 @@ sealed class Program
 				Directory.CreateDirectory(dataLocation);
 				return new ShortcutsContext(Path.Join(dataLocation, "app.db"));
 			})
+			// Core
+			.AddTransient<ImageProcessing>()
 			// Main window requirements
 			.AddSingleton<MainWindow>()
 			.AddTransient<MainWindowViewModel>()
@@ -63,8 +65,8 @@ sealed class Program
 	// Avalonia configuration, don't remove; also used by visual designer.
 	// ReSharper disable once UnusedMember.Global
 	public static AppBuilder BuildAvaloniaApp()
-	{ 
-        // For design time we only care about the collection
+	{
+		// For design time we only care about the collection
 		var designTimeServiceCollection = new ServiceCollection();
 		ConfigureServices(designTimeServiceCollection);
 

@@ -28,7 +28,7 @@ public class ShortcutsContext
 		});
 	}
 
-	public ShortcutDto CreateShortcut(string title, string link)
+	public ShortcutDto CreateShortcut(string title, string link, byte[]? shortcutImageBlob)
 	{
 		return WithConnection(conn =>
 		{
@@ -36,7 +36,8 @@ public class ShortcutsContext
 			{
 				Title = title,
 				Link = link,
-				Type = ShortcutType.DefaultToProcessOpen
+				Type = ShortcutType.DefaultToProcessOpen,
+				ImageBlob = shortcutImageBlob,
 			};
 
 			conn.Insert(newShortcut);
@@ -52,7 +53,8 @@ public class ShortcutsContext
 			Title = shortcut.Title,
 			ShortcutLocation = shortcut.Link,
 			Id = shortcut.Id,
-			Type = shortcut.Type
+			Type = shortcut.Type,
+			ImageBlob = shortcut.ImageBlob
 		};
 	}
 

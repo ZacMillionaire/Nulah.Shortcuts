@@ -44,7 +44,7 @@ public class App : Application
 
 		if (!Design.IsDesignMode)
 		{
-			if (Environment.GetEnvironmentVariable("GlobalHooks") == "true")
+			if (Environment.GetEnvironmentVariable("GlobalHooks") == "false")
 			{
 				// This will cause things to lag like fuck when you hit a break point so try to avoid having it enabled if possible
 				InitHooks();
@@ -52,9 +52,23 @@ public class App : Application
 		}
 	}
 
+	/// <summary>
+	/// Returns the current main window used for classic desktop style applications
+	/// </summary>
+	/// <returns></returns>
+	public static MainWindow? GetMainWindow()
+	{
+		if (Current is { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime desktop })
+		{
+			return desktop.MainWindow as MainWindow;
+		}
+
+		return null;
+	}
+
 	private void InitHooks()
 	{
-		_taskPoolGlobalHook = new SimpleReactiveGlobalHook();
+		_taskPoolGlobalHook = new SimpleReactiveGlobalHook(GlobalHookType.Keyboard);
 		// _taskPoolGlobalHook.HookEnabled.Subscribe(OnHookEnabled);
 		_taskPoolGlobalHook.KeyReleased
 			.Subscribe(e => OnKeyReleased(e, _taskPoolGlobalHook));
@@ -82,7 +96,7 @@ public class App : Application
 			{
 				_logger.LogInformation("Displaying MainWindow on startup");
 				// TODO: I'd love to figure out a way to avoid the mainwindow showing until the content view is fully ready
-				ShowAndBringToFront(_mainWindow);
+				desktop.MainWindow = _mainWindow;
 			}
 		}
 
@@ -103,7 +117,13 @@ public class App : Application
 	private void OnKeyReleased(KeyboardHookEventArgs e, IReactiveGlobalHook hook)
 	{
 		if (e.RawEvent.Mask == (ModifierMask.LeftMeta | ModifierMask.LeftShift)
-		    && (e.Data.KeyCode == KeyCode.VcC || e.Data.KeyCode == KeyCode.VcLeftMeta || e.Data.KeyCode == KeyCode.VcLeftShift))
+		    // This combination is to react when any of the 3 keys are lifted, its kind of jank
+		    // but so is keybinding in general.
+		    // Technically win+shift+c+literally every other key would be a valid combination, but as long as
+		    // one of the 3 primary keys are released it'll trigger.
+		    // Is that a bug? No. It's a funny feature and if someone wants to do it?
+		    // d=====(￣▽￣*)b good for them :D
+		    && e.Data.KeyCode is KeyCode.VcC or KeyCode.VcLeftMeta or KeyCode.VcLeftShift)
 		{
 			ShowMainWindow();
 		}
@@ -116,8 +136,8 @@ public class App : Application
 
 	private void ShowAndBringToFront(MainWindow window)
 	{
-		window.WindowState = WindowState.Maximized;
 		window.Show();
+		// Ensure it's displayed on top
 		window.Activate();
 	}
 }

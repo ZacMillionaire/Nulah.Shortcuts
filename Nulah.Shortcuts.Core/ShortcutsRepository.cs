@@ -17,8 +17,8 @@ public class ShortcutsRepository
 		return _context.GetShortcuts();
 	}
 
-	public ShortcutDto CreateShortcut(string title, string link)
+	public ShortcutDto CreateShortcut(string title, string link, byte[]? shortcutImageBlob)
 	{
-		return _context.CreateShortcut(title, link);
+		return _context.CreateShortcut(title, link, shortcutImageBlob);
 	}
 }
