@@ -6,6 +6,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nulah.Shortcuts.Data;
 using Nulah.Shortcuts.ViewModels;
 using Nulah.Shortcuts.Views;
 using ReactiveUI;
@@ -38,6 +39,9 @@ public class App : Application
 
 	public override void Initialize()
 	{
+		// Pre-warm the context
+		_provider.GetRequiredService<ShortcutsContext>();
+		
 		_logger.LogInformation("Initialising App");
 		AvaloniaXamlLoader.Load(this);
 		_logger.LogInformation("AvaloniaXamlLoader Loaded");
@@ -88,6 +92,7 @@ public class App : Application
 			// open
 			desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+
 			_mainWindow = _provider.GetRequiredService<MainWindow>();
 			// the main window does not automatically locate its viewmodel so we set it once
 			_mainWindow.ViewModel = _provider.GetRequiredService<MainWindowViewModel>();
@@ -97,6 +102,7 @@ public class App : Application
 				_logger.LogInformation("Displaying MainWindow on startup");
 				// TODO: I'd love to figure out a way to avoid the mainwindow showing until the content view is fully ready
 				desktop.MainWindow = _mainWindow;
+				ShowAndBringToFront(_mainWindow);
 			}
 		}
 
@@ -134,6 +140,10 @@ public class App : Application
 		ShowMainWindow();
 	}
 
+	/// <summary>
+	/// Brings the window to the front, regardless of it's current visibility
+	/// </summary>
+	/// <param name="window"></param>
 	private void ShowAndBringToFront(MainWindow window)
 	{
 		window.Show();

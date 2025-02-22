@@ -28,8 +28,8 @@
                     <Grid RowDefinitions="40,*,Auto" Margin="5" MinHeight="150" MinWidth="150">
                         <TextBlock Grid.Row="0" Text="{TemplateBinding Title}"
                                    TextWrapping="WrapWithOverflow"
-                                   MaxWidth="130"
-                                   TextTrimming="{x:Static TextTrimming.CharacterEllipsis}"
+                                   MaxWidth="120"
+                                   TextTrimming="{x:Static TextTrimming.WordEllipsis}"
                                    HorizontalAlignment="Center"
                                    TextAlignment="Center"
                                    FontSize="16" />

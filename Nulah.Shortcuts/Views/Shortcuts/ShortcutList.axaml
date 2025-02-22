@@ -7,7 +7,7 @@
              xmlns:heroIcon="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
              xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
              xmlns:controls="clr-namespace:Nulah.Shortcuts.Controls"
-             mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800"
              x:DataType="viewModels:ShortcutListViewModel"
              x:Class="Nulah.Shortcuts.Views.Shortcuts.ShortcutList">
     <Design.DataContext>
@@ -69,8 +69,9 @@
             <TextBlock>No shortcuts</TextBlock>
         </StackPanel>
         <ScrollViewer Grid.Row="2">
-            <ItemsControl ItemsSource="{Binding Shortcuts}"
-                          IsVisible="{Binding Shortcuts.Count}">
+            <ItemsControl
+                ItemsSource="{Binding Shortcuts}"
+                IsVisible="{Binding Shortcuts.Count}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />
@@ -81,12 +82,31 @@
                         <shortcuts:ShortcutItem Margin="5" Title="{Binding Title}"
                                                 ShortcutLink="{Binding ShortcutLocation}">
                             <shortcuts:ShortcutItem.ShortcutContent>
-                                <StackPanel Background="Aqua">
+                                <Panel Background="#E1E1E1">
+                                    <Interaction.Behaviors>
+                                        <ExecuteCommandOnPointerPressedBehavior
+                                            Command="{Binding 
+                                            $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).OpenShortcutCommand
+                                            }"
+                                            CommandParameter="{Binding}" />
+                                    </Interaction.Behaviors>
                                     <controls:ByteArrayImage ByteArray="{Binding ImageBlob}"
+                                                             VerticalAlignment="Center" HorizontalAlignment="Center"
                                                              Width="50" Height="50" />
-                                    <heroIcon:HeroIcon Type="Backspace" />
-                                </StackPanel>
+                                </Panel>
                             </shortcuts:ShortcutItem.ShortcutContent>
+                            <shortcuts:ShortcutItem.ShortcutActions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                            Margin="3">
+                                    <shortcuts:ShortcutActionButton
+                                        Command="{Binding 
+                                        $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).OpenShortcutCommand
+                                        }"
+                                        CommandParameter="{Binding}">
+                                        <heroIcon:HeroIcon Type="ClipboardDocument" />
+                                    </shortcuts:ShortcutActionButton>
+                                </StackPanel>
+                            </shortcuts:ShortcutItem.ShortcutActions>
                         </shortcuts:ShortcutItem>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

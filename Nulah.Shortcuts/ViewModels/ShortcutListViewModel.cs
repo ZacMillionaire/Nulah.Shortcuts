@@ -55,7 +55,6 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 
 		this.WhenActivated(async d =>
 		{
-			await Task.Delay(1000);
 			LoadShortcuts();
 			d.Dispose();
 		});
@@ -122,6 +121,12 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 				ShortcutImage = resized;
 			}
 		}
+	}
+
+	[ReactiveCommand]
+	private void OpenShortcut(ShortcutDto shortcut)
+	{
+		App.GetMainWindow()?.Close();
 	}
 
 	private void Reset()

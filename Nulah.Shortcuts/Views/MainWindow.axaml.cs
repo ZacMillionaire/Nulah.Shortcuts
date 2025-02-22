@@ -1,10 +1,8 @@
-using System.Diagnostics;
 using System.Reactive.Disposables;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Platform;
 using Avalonia.ReactiveUI;
-using Microsoft.Extensions.Logging;
 using Nulah.Shortcuts.ViewModels;
 using ReactiveUI;
 

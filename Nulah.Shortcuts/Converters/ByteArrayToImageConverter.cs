@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
@@ -26,13 +27,17 @@ public class ByteArrayToImageConverter : IValueConverter
 					// Should probably log sort of error here
 					// Fallback if the content of imageBlob is not a valid image (eg, the image the imageBlob represents was
 					// actually an SVG)
-					//return new Bitmap(AssetLoader.Open(new Uri("avares://Nulah.Shortcuts/Assets/default_icon.ico")));
+					return new BindingNotification(ex, BindingErrorType.Error);
 				}
 			}
 
-			// Return a default icon if we have no valid value
+			// Return a default icon if we have no valid value for design mode
+			if (Design.IsDesignMode)
+			{
+				return new Bitmap(AssetLoader.Open(new Uri("avares://Nulah.Shortcuts/Assets/avalonia-logo.ico")));
+			}
+
 			return null;
-			//return new Bitmap(AssetLoader.Open(new Uri("avares://Nulah.Shortcuts/Assets/default_icon.ico")));
 		}
 
 		return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
