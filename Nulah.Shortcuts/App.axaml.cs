@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -41,7 +44,7 @@ public class App : Application
 	{
 		// Pre-warm the context
 		_provider.GetRequiredService<ShortcutsContext>();
-		
+
 		_logger.LogInformation("Initialising App");
 		AvaloniaXamlLoader.Load(this);
 		_logger.LogInformation("AvaloniaXamlLoader Loaded");
@@ -149,5 +152,22 @@ public class App : Application
 		window.Show();
 		// Ensure it's displayed on top
 		window.Activate();
+	}
+
+	private void CloseAppTrayMenuItem_OnClick(object? sender, EventArgs e)
+	{
+		// Ensure the tray icon does not remain in the system tray under certain circumstances
+		if (TrayIcon.GetIcons(this)?.FirstOrDefault() is { } first)
+		{
+			first.Dispose();
+		}
+
+		Environment.Exit(0);
+	}
+
+	private void OpenDatabaseLocationTrayMenuItem_OnClick(object? sender, EventArgs e)
+	{
+		_mainWindow!.Close();
+		Process.Start("explorer", Path.Join(AppContext.BaseDirectory, "data"));
 	}
 }
