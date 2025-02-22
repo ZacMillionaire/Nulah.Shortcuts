@@ -11,7 +11,10 @@ public class ImageProcessing
 		using Image image = Image.Load(inStream);
 		using MemoryStream ms = new MemoryStream();
 
-		image.Mutate(x => x.Resize(width, 0));
+		if (image.Width > width)
+		{
+			image.Mutate(x => x.Resize(width, 0));
+		}
 
 		image.Save(ms, new PngEncoder());
 

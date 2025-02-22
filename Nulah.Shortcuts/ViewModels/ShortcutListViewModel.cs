@@ -38,6 +38,9 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	[Reactive]
 	private byte[]? _shortcutImage;
 
+	[Reactive]
+	private bool _isEnabled;
+
 	private readonly ImageProcessing? _imageProcesor;
 
 	protected ShortcutListViewModel()
@@ -75,6 +78,7 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	{
 		if (_shortcutRepository != null)
 		{
+			IsEnabled = false;
 			_logger.LogInformation("Loading shortcuts");
 			var loadedShortcuts = _shortcutRepository.GetShortcuts()
 				.Select(x => new ShortcutViewModel(x));
@@ -83,6 +87,7 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 			{
 				_logger.LogInformation("adding shortcuts to cache");
 				cache.Load(loadedShortcuts);
+				IsEnabled = true;
 			});
 		}
 	}
@@ -92,11 +97,13 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	{
 		if (_shortcutRepository is not null)
 		{
+			IsEnabled = false;
 			await Task.Yield();
 			var newShortcut = _shortcutRepository.CreateShortcut(_title, _link, _shortcutImage);
 			_shortcutCache.AddOrUpdate(new ShortcutViewModel(newShortcut));
 
 			Reset();
+			IsEnabled = true;
 		}
 	}
 
@@ -107,6 +114,7 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 		// Get top level from the current control. Alternatively, you can use Window reference instead.
 		if (_imageProcesor is not null && TopLevel.GetTopLevel(App.GetMainWindow()) is { } topLevel)
 		{
+			IsEnabled = false;
 			var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
 			{
 				Title = "Select image",
@@ -120,10 +128,12 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 			if (files.Count == 1)
 			{
 				await using var stream = await files[0].OpenReadAsync();
-				var resized = _imageProcesor.ResizeImage(stream,150);
+				var resized = _imageProcesor.ResizeImage(stream, 100);
 
 				ShortcutImage = resized;
 			}
+
+			IsEnabled = true;
 		}
 	}
 

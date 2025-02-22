@@ -13,9 +13,10 @@
     <Style Selector="controls|ByteArrayImage">
         <!-- Set Defaults -->
         <Setter Property="ByteArray" />
+        <Setter Property="ImageStretch" Value="UniformToFill"/>
         <Setter Property="Template">
             <ControlTemplate>
-                <Image Stretch="UniformToFill"
+                <Image Stretch="{TemplateBinding ImageStretch}"
                        Source="{TemplateBinding ByteArray, Converter={StaticResource ByteArrayToImageConverter}}" />
             </ControlTemplate>
         </Setter>

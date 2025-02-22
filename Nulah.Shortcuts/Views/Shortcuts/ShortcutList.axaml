@@ -13,56 +13,85 @@
     <Design.DataContext>
         <designModels:ShortcutListDesignModel />
     </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="Panel.IconImagePanel">
+            <Setter Property="Background" Value="#E1E1E1" />
+            <Setter Property="Height" Value="90" />
+        </Style>
+        <Style Selector="Panel.IconImagePanel > controls|ByteArrayImage">
+            <Setter Property="ImageStretch" Value="Uniform" />
+        </Style>
+        <Style Selector="shortcuts|ShortcutItem">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="150" />
+        </Style>
+    </UserControl.Styles>
     <Grid RowDefinitions="Auto,Auto,400"
           Background="White">
         <Border Grid.Row="0" BorderThickness="0,0,0,1"
                 BorderBrush="Black"
                 Background="#eee"
                 Padding="5">
-            <StackPanel Grid.IsSharedSizeScope="True" Spacing="5">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" SharedSizeGroup="Label" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Title *"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right" />
-                    <TextBox Grid.Column="1" Text="{Binding Title}" />
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="Label" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Shortcut *"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right" />
-                    <TextBox Grid.Column="1" Text="{Binding Link}" />
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition SharedSizeGroup="Label" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="Icon"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Right" />
-                    <Button Grid.Column="2" Command="{Binding FilePickerCommand}"
-                            VerticalAlignment="Bottom">
-                        Select
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Grid.IsSharedSizeScope="True" Spacing="5"
+                            IsEnabled="{Binding IsEnabled}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Label" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Title *"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right" />
+                        <TextBox Grid.Column="1" Text="{Binding Title}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Label" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Shortcut *"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right" />
+                        <TextBox Grid.Column="1" Text="{Binding Link}" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="Label" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Icon"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right" />
+                        <Button Grid.Column="1" Command="{Binding FilePickerCommand}">
+                            Select
+                        </Button>
+                    </Grid>
+                    <Button HorizontalAlignment="Right"
+                            Command="{Binding CreateShortcutCommand}">
+                        Create
                     </Button>
-                    <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center">
-                        <controls:ByteArrayImage ByteArray="{Binding ShortcutImage}"
-                                                 Width="50" Height="50" />
-                    </Border>
-                </Grid>
-                <Button HorizontalAlignment="Right"
-                        Command="{Binding CreateShortcutCommand}">
-                    Create
-                </Button>
-            </StackPanel>
+                </StackPanel>
+                <shortcuts:ShortcutItem Grid.Column="1" Title="{Binding Title}">
+                    <shortcuts:ShortcutItem.ShortcutContent>
+                        <Panel Classes="IconImagePanel">
+                            <controls:ByteArrayImage ByteArray="{Binding ShortcutImage}" />
+                        </Panel>
+                    </shortcuts:ShortcutItem.ShortcutContent>
+                    <shortcuts:ShortcutItem.ShortcutActions>
+                        <Grid ColumnDefinitions="Auto,Auto" HorizontalAlignment="Right" Height="30" Margin="3">
+                            <shortcuts:ShortcutActionButton Grid.Column="0" IsEnabled="False">
+                                <heroIcon:HeroIcon Type="ClipboardDocument" Foreground="Gray" />
+                            </shortcuts:ShortcutActionButton>
+                            <Grid Grid.Column="1" ColumnDefinitions="Auto,Auto" VerticalAlignment="Center">
+                                <shortcuts:ShortcutActionButton Grid.Column="0" IsEnabled="False">
+                                    <heroIcon:HeroIcon Type="Trash" Foreground="Gray" />
+                                </shortcuts:ShortcutActionButton>
+                            </Grid>
+                        </Grid>
+                    </shortcuts:ShortcutItem.ShortcutActions>
+                </shortcuts:ShortcutItem>
+            </Grid>
         </Border>
         <StackPanel Grid.Row="2"
                     IsVisible="{Binding !Shortcuts.Count}">
@@ -79,21 +108,18 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <shortcuts:ShortcutItem Margin="5" Width="150" Title="{Binding Title}"
+                        <shortcuts:ShortcutItem Title="{Binding Title}"
                                                 ShortcutLink="{Binding ShortcutLocation}">
                             <shortcuts:ShortcutItem.ShortcutContent>
-                                <Panel Background="#E1E1E1">
+                                <Panel Classes="IconImagePanel">
                                     <Interaction.Behaviors>
-                                        <ExecuteCommandOnPointerPressedBehavior
+                                        <ExecuteCommandOnDoubleTappedBehavior
                                             Command="{Binding 
                                             $parent[shortcuts:ShortcutList].((viewModels:ShortcutListViewModel)DataContext).OpenShortcutCommand
                                             }"
                                             CommandParameter="{Binding}" />
                                     </Interaction.Behaviors>
-                                    <controls:ByteArrayImage ByteArray="{Binding ImageBlob}"
-                                                             Height="100"
-                                                             Width="100"
-                                                             VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <controls:ByteArrayImage ByteArray="{Binding ImageBlob}" />
                                 </Panel>
                             </shortcuts:ShortcutItem.ShortcutContent>
                             <shortcuts:ShortcutItem.ShortcutActions>

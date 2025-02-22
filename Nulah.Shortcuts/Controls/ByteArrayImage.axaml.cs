@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.Primitives;
+using Avalonia.Media;
 
 namespace Nulah.Shortcuts.Controls;
 
@@ -10,6 +11,15 @@ public class ByteArrayImage : TemplatedControl
 {
 	public static readonly StyledProperty<byte[]?> ByteArrayProperty
 		= AvaloniaProperty.Register<ByteArrayImage, byte[]?>(nameof(ByteArray));
+
+	public static readonly StyledProperty<Stretch> ImageStretchProperty 
+		= AvaloniaProperty.Register<ByteArrayImage, Stretch>(nameof(ImageStretch));
+
+	public Stretch ImageStretch
+	{
+		get => GetValue(ImageStretchProperty);
+		set => SetValue(ImageStretchProperty, value);
+	}
 
 	public byte[]? ByteArray
 	{
