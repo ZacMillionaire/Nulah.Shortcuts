@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:reactiveUi="http://reactiveui.net"
+             xmlns:vm="clr-namespace:Nulah.Shortcuts.ViewModels"
+             xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
+             x:DataType="vm:ShortcutManagerViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Nulah.Shortcuts.Views.ShortcutManagerView">
+    <Design.DataContext>
+        <designModels:ShortcutManagerDesignModel/>
+    </Design.DataContext>
+    <Border x:Name="HackBorderToClipContentToRoundedCorners"
+            ClipToBounds="True"
+            CornerRadius="5">
+        <Grid RowDefinitions="Auto,Auto">
+            <reactiveUi:ViewModelViewHost Grid.Row="1" x:Name="ShortcutList" />
+        </Grid>
+    </Border>
+</UserControl>

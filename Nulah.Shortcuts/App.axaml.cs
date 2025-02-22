@@ -25,9 +25,11 @@ public class App : Application
 	private MainWindow? _mainWindow;
 
 #pragma warning disable CS8618, CS9264
-	public App(){}
+	public App()
+	{
+	}
 #pragma warning restore CS8618, CS9264
-	
+
 	public App(IServiceProvider provider, ILogger<App> logger)
 	{
 		_provider = provider;
@@ -40,19 +42,14 @@ public class App : Application
 		AvaloniaXamlLoader.Load(this);
 		_logger.LogInformation("AvaloniaXamlLoader Loaded");
 
-		// Have to do this after the loader otherwise things just won't load lol!
-		// if (!Design.IsDesignMode)
-		// {
-		// 	Services();
-		//
-		// 	InitMainWindow();
-		//
-		// 	if (Environment.GetEnvironmentVariable("GlobalHooks") == "true")
-		// 	{
-		// 		// This will cause things to lag like fuck when you hit a break point so try to avoid having it enabled if possible
-		// 		InitHooks();
-		// 	}
-		// }
+		if (!Design.IsDesignMode)
+		{
+			if (Environment.GetEnvironmentVariable("GlobalHooks") == "true")
+			{
+				// This will cause things to lag like fuck when you hit a break point so try to avoid having it enabled if possible
+				InitHooks();
+			}
+		}
 	}
 
 	private void InitHooks()
@@ -80,15 +77,27 @@ public class App : Application
 			_mainWindow = _provider.GetRequiredService<MainWindow>();
 			// the main window does not automatically locate its viewmodel so we set it once
 			_mainWindow.ViewModel = _provider.GetRequiredService<MainWindowViewModel>();
+
 			if (_mainWindow is { IsVisible: true })
 			{
 				_logger.LogInformation("Displaying MainWindow on startup");
-				desktop.MainWindow = _mainWindow;
-				desktop.MainWindow.BringIntoView();
+				// TODO: I'd love to figure out a way to avoid the mainwindow showing until the content view is fully ready
+				ShowAndBringToFront(_mainWindow);
 			}
 		}
 
 		base.OnFrameworkInitializationCompleted();
+	}
+
+	private void ShowMainWindow()
+	{
+		Dispatcher.UIThread.Invoke(() =>
+		{
+			if (_mainWindow is { IsVisible: false })
+			{
+				ShowAndBringToFront(_mainWindow);
+			}
+		});
 	}
 
 	private void OnKeyReleased(KeyboardHookEventArgs e, IReactiveGlobalHook hook)
@@ -100,21 +109,15 @@ public class App : Application
 		}
 	}
 
-	private void ShowMainWindow()
-	{
-		Dispatcher.UIThread.Invoke(() =>
-		{
-			if (_mainWindow is { IsVisible: false })
-			{
-				_mainWindow.WindowState = WindowState.Maximized;
-				_mainWindow.Show();
-				Console.WriteLine("Open magic window");
-			}
-		});
-	}
-
 	private void OpenWindowTrayMenuItem_OnClick(object? sender, EventArgs e)
 	{
 		ShowMainWindow();
+	}
+
+	private void ShowAndBringToFront(MainWindow window)
+	{
+		window.WindowState = WindowState.Maximized;
+		window.Show();
+		window.Activate();
 	}
 }

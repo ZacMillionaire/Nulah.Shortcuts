@@ -8,7 +8,7 @@ namespace Nulah.Shortcuts.ViewModels;
 public class MainWindowViewModel : ViewModelBase<IMainWindowViewModel>, IMainWindowViewModel
 {
 	[Reactive]
-	public IShortcutListViewModel ShortcutListViewModel { get; set; }
+	public IViewModelInterface ContentViewModel { get; set; }
 
 #pragma warning disable CS8618, CS9264
 	public MainWindowViewModel()
@@ -18,6 +18,6 @@ public class MainWindowViewModel : ViewModelBase<IMainWindowViewModel>, IMainWin
 
 	public MainWindowViewModel(IServiceProvider serviceProvider)
 	{
-		ShortcutListViewModel = serviceProvider.GetRequiredService<IShortcutListViewModel>();
+		ContentViewModel = serviceProvider.GetRequiredService<IShortcutManagerViewModel>();
 	}
 }

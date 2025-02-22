@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reactive.Disposables;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -11,26 +12,16 @@ namespace Nulah.Shortcuts.Views;
 
 public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
-	private readonly ILogger _logger;
-
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-	public MainWindow() : this(null)
+	public MainWindow()
 	{
-	}
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-
-	public MainWindow(ILogger<MainWindow> logger)
-	{
-		_logger = logger;
-
 		InitializeComponent();
 
 		this.WhenActivated(disposable =>
 		{
 			this.OneWayBind(
 					ViewModel,
-					vm => vm.ShortcutListViewModel,
-					view => view.ShortcutList.ViewModel
+					vm => vm.ContentViewModel,
+					view => view.ContentView.ViewModel
 				)
 				.DisposeWith(disposable);
 		});

@@ -4,6 +4,6 @@ public class MainWindowDesignModel : MainWindowViewModel
 {
 	public MainWindowDesignModel()
 	{
-		ShortcutListViewModel = new ShortcutListDesignModel();
+		ContentViewModel = new ShortcutManagerDesignModel();
 	}
 }

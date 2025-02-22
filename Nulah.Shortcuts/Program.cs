@@ -52,8 +52,10 @@ sealed class Program
 			.AddSingleton<ShortcutsRepository>()
 			// View models
 			.AddViewModel<IShortcutListViewModel, ShortcutListViewModel>()
+			.AddViewModel<IShortcutManagerViewModel, ShortcutManagerViewModel>()
 			// Views
 			.AddView<ShortcutList, IShortcutListViewModel>()
+			.AddView<ShortcutManagerView, IShortcutManagerViewModel>()
 			.AddLogging(builder => builder.AddConsole());
 	}
 
