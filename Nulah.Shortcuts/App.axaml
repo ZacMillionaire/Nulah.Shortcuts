@@ -1,13 +1,27 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Nulah.Shortcuts.Controls"
+             xmlns:shortcuts="clr-namespace:Nulah.Shortcuts.Views.Shortcuts"
              x:Class="Nulah.Shortcuts.App"
              RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="Views/Shortcuts/ShortcutItem.axaml"/>
-        <StyleInclude Source="Controls/ByteArrayImage.axaml"/>
+        <StyleInclude Source="Views/Shortcuts/ShortcutItem.axaml" />
+        <StyleInclude Source="Controls/ByteArrayImage.axaml" />
+
+        <Style Selector="Panel.IconImagePanel">
+            <Setter Property="Background" Value="#E1E1E1" />
+            <Setter Property="Height" Value="90" />
+        </Style>
+        <Style Selector="Panel.IconImagePanel > controls|ByteArrayImage">
+            <Setter Property="ImageStretch" Value="Uniform" />
+        </Style>
+        <Style Selector="shortcuts|ShortcutItem">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Width" Value="150" />
+        </Style>
     </Application.Styles>
     <TrayIcon.Icons>
         <TrayIcons>
@@ -17,7 +31,7 @@
                     <NativeMenu>
                         <NativeMenuItem Header="Open" Click="OpenWindowTrayMenuItem_OnClick" />
                         <NativeMenuItem Header="Database location" Click="OpenDatabaseLocationTrayMenuItem_OnClick" />
-                        <NativeMenuItemSeparator/>
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Header="Close" Click="CloseAppTrayMenuItem_OnClick" />
                     </NativeMenu>
                 </TrayIcon.Menu>

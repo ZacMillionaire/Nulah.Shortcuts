@@ -2,7 +2,7 @@
 using Nulah.Shortcuts.Domain.Enums;
 using ReactiveUI.SourceGenerators;
 
-namespace Nulah.Shortcuts.ViewModels;
+namespace Nulah.Shortcuts.ViewModels.Shortcuts;
 
 public partial class ShortcutViewModel : DtoViewModelBase
 {
@@ -16,6 +16,7 @@ public partial class ShortcutViewModel : DtoViewModelBase
 		ShortcutLocation = newShortcut.ShortcutLocation;
 		Type = newShortcut.Type;
 		ImageBlob = newShortcut.ImageBlob;
+		IsDeleted = newShortcut.IsDeleted;
 	}
 
 	public int Id { get; set; }
@@ -23,4 +24,5 @@ public partial class ShortcutViewModel : DtoViewModelBase
 	public string ShortcutLocation { get; set; } = null!;
 	public ShortcutType Type { get; set; }
 	public byte[]? ImageBlob { get; set; }
+	public bool IsDeleted { get; set; }
 }

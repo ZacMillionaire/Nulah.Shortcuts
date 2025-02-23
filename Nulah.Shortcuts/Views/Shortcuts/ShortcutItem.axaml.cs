@@ -17,6 +17,9 @@ public class ShortcutItem : TemplatedControl
 	public static readonly StyledProperty<object?> ShortcutActionsProperty =
 		AvaloniaProperty.Register<ShortcutItem, object?>(nameof(ShortcutActions));
 
+	public static readonly StyledProperty<bool> IsDeletedProperty =
+		AvaloniaProperty.Register<ShortcutItem, bool>(nameof(IsDeleted));
+
 	public string Title
 	{
 		get => GetValue(TitleProperty);
@@ -39,5 +42,11 @@ public class ShortcutItem : TemplatedControl
 	{
 		get => GetValue(ShortcutActionsProperty);
 		set => SetValue(ShortcutActionsProperty, value);
+	}
+
+	public bool IsDeleted
+	{
+		get => GetValue(IsDeletedProperty);
+		set => SetValue(IsDeletedProperty, value);
 	}
 }

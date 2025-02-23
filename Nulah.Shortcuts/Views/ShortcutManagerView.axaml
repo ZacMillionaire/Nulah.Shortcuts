@@ -3,11 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:reactiveUi="http://reactiveui.net"
-             xmlns:vm="clr-namespace:Nulah.Shortcuts.ViewModels"
              xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
-             x:DataType="vm:ShortcutManagerViewModel"
-             mc:Ignorable="d" 
-             d:DesignWidth="1000" 
+             xmlns:shortcuts="clr-namespace:Nulah.Shortcuts.ViewModels.Shortcuts"
+             xmlns:animations="clr-namespace:Nulah.Shortcuts.UI.Animations"
+             x:DataType="shortcuts:ShortcutManagerViewModel"
+             mc:Ignorable="d"
+             d:DesignWidth="1000"
              d:DesignHeight="800"
              x:Class="Nulah.Shortcuts.Views.ShortcutManagerView">
     <Design.DataContext>
@@ -17,8 +18,33 @@
             Width="800"
             ClipToBounds="True"
             CornerRadius="5">
-        <Grid RowDefinitions="Auto,Auto">
-            <reactiveUi:ViewModelViewHost Grid.Row="1" x:Name="ShortcutList" />
+        <Grid RowDefinitions="Auto,Auto,*" Background="White">
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <Button
+                    Command="{Binding ChangeActionCommand}"
+                    CommandParameter="{x:Static shortcuts:ShortcutManagerActionMode.CreateEdit}">
+                    Create
+                </Button>
+                <Button
+                    Command="{Binding ChangeActionCommand}"
+                    CommandParameter="{x:Static shortcuts:ShortcutManagerActionMode.RecycleBin}">
+                    Recycle bin
+                </Button>
+                <Button
+                    Command="{Binding ChangeActionCommand}"
+                    CommandParameter="{x:Static shortcuts:ShortcutManagerActionMode.Hide}">
+                    Close Action Panel
+                </Button>
+            </StackPanel>
+            <reactiveUi:ViewModelViewHost Grid.Row="1" x:Name="ShortcutAction">
+                <reactiveUi:ViewModelViewHost.PageTransition>
+                    <CompositePageTransition>
+                        <animations:HeightTranstion Duration="0:0:00.300" />
+                        <CrossFade Duration="0:0:00.300" />
+                    </CompositePageTransition>
+                </reactiveUi:ViewModelViewHost.PageTransition>
+            </reactiveUi:ViewModelViewHost>
+            <reactiveUi:ViewModelViewHost Grid.Row="2" x:Name="ShortcutList" />
         </Grid>
     </Border>
 </UserControl>

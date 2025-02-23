@@ -1,11 +1,12 @@
-﻿using Nulah.Shortcuts.Data.Models;
+﻿using Nulah.Shortcuts.Data.Criteria;
+using Nulah.Shortcuts.Data.Models;
 using Nulah.Shortcuts.Domain;
 using Nulah.Shortcuts.Domain.Enums;
 using SQLite;
 
 namespace Nulah.Shortcuts.Data;
 
-public class ShortcutsContext
+public partial class ShortcutsContext
 {
 	private readonly string _databaseLocation;
 
@@ -18,14 +19,12 @@ public class ShortcutsContext
 		});
 	}
 
-	public List<ShortcutDto> GetShortcuts()
+	public List<ShortcutDto> GetShortcuts(ShortcutCriteria? filter)
 	{
-		return WithConnection(conn =>
-		{
-			return conn.Table<Shortcut>()
-				.Select(ToDto)
-				.ToList();
-		});
+		return WithConnection(conn => conn.Table<Shortcut>()
+			.Where(BuildShortcutQuery(filter))
+			.Select(ToDto)
+			.ToList());
 	}
 
 	public ShortcutDto CreateShortcut(string title, string link, byte[]? shortcutImageBlob)
@@ -46,6 +45,37 @@ public class ShortcutsContext
 		});
 	}
 
+	public void DeleteShortcut(int shortcutId, bool softDelete = true)
+	{
+		WithConnection(conn =>
+		{
+			var shortcutToDelete = conn.Table<Shortcut>()
+				.FirstOrDefault(x => x.Id == shortcutId);
+
+			// TODO: Hard delete not implemented yet so only soft delete is possible
+			if (shortcutToDelete is not null)
+			{
+				shortcutToDelete.IsDeleted = true;
+				conn.Update(shortcutToDelete);
+			}
+		});
+	}
+
+	public void RestoreShortcut(int shortcutId)
+	{
+		WithConnection(conn =>
+		{
+			var shortcutToDelete = conn.Table<Shortcut>()
+				.FirstOrDefault(x => x.Id == shortcutId);
+
+			if (shortcutToDelete is not null)
+			{
+				shortcutToDelete.IsDeleted = false;
+				conn.Update(shortcutToDelete);
+			}
+		});
+	}
+
 	private ShortcutDto ToDto(Shortcut shortcut)
 	{
 		return new ShortcutDto()
@@ -54,7 +84,8 @@ public class ShortcutsContext
 			ShortcutLocation = shortcut.Link,
 			Id = shortcut.Id,
 			Type = shortcut.Type,
-			ImageBlob = shortcut.ImageBlob
+			ImageBlob = shortcut.ImageBlob,
+			IsDeleted = shortcut.IsDeleted,
 		};
 	}
 

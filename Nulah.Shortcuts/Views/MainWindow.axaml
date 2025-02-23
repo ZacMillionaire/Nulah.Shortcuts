@@ -1,27 +1,30 @@
 <Window xmlns="https://github.com/avaloniaui"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:vm="using:Nulah.Shortcuts.ViewModels"
-                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                  xmlns:reactiveUi="http://reactiveui.net"
-                  xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
-                  mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
-                  x:Class="Nulah.Shortcuts.Views.MainWindow"
-                  x:DataType="vm:MainWindowViewModel"
-                  Icon="/Assets/avalonia-logo.ico"
-                  Background="Transparent" 
-                  PointerPressed="FadeBorder_OnPointerPressed"
-                  Title="Nulah.Shortcuts">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Nulah.Shortcuts.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:reactiveUi="http://reactiveui.net"
+        xmlns:designModels="clr-namespace:Nulah.Shortcuts.ViewModels.DesignModels"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+        x:Class="Nulah.Shortcuts.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Background="Transparent"
+        PointerPressed="FadeBorder_OnPointerPressed"
+        Title="Nulah.Shortcuts">
     <Design.DataContext>
         <designModels:MainWindowDesignModel />
     </Design.DataContext>
-    <Border x:Name="FadeBorder" 
+    <Border x:Name="FadeBorder"
             Background="#33000000">
-        <Border BoxShadow="0 0 15 2 #444"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                CornerRadius="5">
-            <reactiveUi:ViewModelViewHost x:Name="ContentView" />
-        </Border>
+        <Panel HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Height="500">
+            <Border BoxShadow="0 0 15 2 #444"
+                    CornerRadius="5"
+                    VerticalAlignment="Top">
+                <reactiveUi:ViewModelViewHost x:Name="ContentView" />
+            </Border>
+        </Panel>
     </Border>
 </Window>

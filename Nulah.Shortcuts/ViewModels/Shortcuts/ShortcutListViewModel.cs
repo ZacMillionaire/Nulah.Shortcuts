@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Platform.Storage;
+using System.Reactive.Linq;
 using DynamicData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Nulah.Shortcuts.Core;
+using Nulah.Shortcuts.Data.Criteria;
 using Nulah.Shortcuts.Domain;
 using Nulah.Shortcuts.Models.Interfaces;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
-namespace Nulah.Shortcuts.ViewModels;
+namespace Nulah.Shortcuts.ViewModels.Shortcuts;
 
 public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewModel>, IShortcutListViewModel
 {
@@ -25,42 +23,32 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	protected readonly SourceCache<ShortcutViewModel, int> _shortcutCache = new(x => x.Id);
 	private readonly ReadOnlyObservableCollection<ShortcutViewModel> _shortcuts;
 
-	private IObservable<bool> _canCreateShortcut;
-
 	public ReadOnlyObservableCollection<ShortcutViewModel> Shortcuts => _shortcuts;
-
-	[Reactive]
-	private string _title = string.Empty;
-
-	[Reactive]
-	private string _link = string.Empty;
-
-	[Reactive]
-	private byte[]? _shortcutImage;
 
 	[Reactive]
 	private bool _isEnabled;
 
-	private readonly ImageProcessing? _imageProcesor;
+	private string _searchString = string.Empty;
 
 	protected ShortcutListViewModel()
 	{
+		// Future use
+		//var shortcutTextFilter = this.WhenAnyValue(viewModel => viewModel._searchString)
+		//	.Select(MakeFilter);
+
 		_shortcutCache
 			.Connect()
+			// Future use
+			//.Filter(shortcutTextFilter)
 			.DeferUntilLoaded()
+			.SortBy(x => x.Id)
+			.ObserveOn(RxApp.MainThreadScheduler)
 			.Bind(out _shortcuts)
 			.Subscribe();
 
-		_canCreateShortcut = this.WhenAnyValue(
-			x => x.Title,
-			x => x.Link,
-			x => x._shortcutRepository,
-			(x, y, z) => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrWhiteSpace(y) && z is not null
-		);
-
 		this.WhenActivated(async d =>
 		{
-			LoadShortcuts();
+			FilterShortcuts();
 			d.Dispose();
 		});
 	}
@@ -70,17 +58,36 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	{
 		_logger = logger;
 		_shortcutRepository = serviceProvider.GetRequiredService<ShortcutsRepository>();
-		_imageProcesor = serviceProvider.GetRequiredService<ImageProcessing>();
 		_logger.LogInformation("Creating ShortcutListViewModel");
 	}
 
-	private void LoadShortcuts()
+	public void AddShortcut(ShortcutDto shortcut)
+	{
+		_shortcutCache.AddOrUpdate(new ShortcutViewModel(shortcut));
+	}
+
+	public void FilterShortcuts(bool deletedOnly = false)
+	{
+		LoadShortcuts(new ShortcutCriteria()
+		{
+			DeletedOnly = deletedOnly
+		});
+	}
+
+	private Func<ShortcutViewModel, bool> MakeFilter(string searchString)
+	{
+		// TODO: update this so it filters by search string
+		return x => true;
+		//return shortcutViewModel => shortcutViewModel.;
+	}
+
+	private void LoadShortcuts(ShortcutCriteria? criteria = null)
 	{
 		if (_shortcutRepository != null)
 		{
 			IsEnabled = false;
 			_logger.LogInformation("Loading shortcuts");
-			var loadedShortcuts = _shortcutRepository.GetShortcuts()
+			var loadedShortcuts = _shortcutRepository.GetShortcuts(criteria)
 				.Select(x => new ShortcutViewModel(x));
 
 			_shortcutCache.Edit(cache =>
@@ -89,51 +96,6 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 				cache.Load(loadedShortcuts);
 				IsEnabled = true;
 			});
-		}
-	}
-
-	[ReactiveCommand(CanExecute = nameof(_canCreateShortcut))]
-	private async Task CreateShortcut()
-	{
-		if (_shortcutRepository is not null)
-		{
-			IsEnabled = false;
-			await Task.Yield();
-			var newShortcut = _shortcutRepository.CreateShortcut(_title, _link, _shortcutImage);
-			_shortcutCache.AddOrUpdate(new ShortcutViewModel(newShortcut));
-
-			Reset();
-			IsEnabled = true;
-		}
-	}
-
-	[ReactiveCommand]
-	private async Task FilePicker()
-	{
-		// Start async operation to open the dialog.
-		// Get top level from the current control. Alternatively, you can use Window reference instead.
-		if (_imageProcesor is not null && TopLevel.GetTopLevel(App.GetMainWindow()) is { } topLevel)
-		{
-			IsEnabled = false;
-			var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-			{
-				Title = "Select image",
-				AllowMultiple = false,
-				FileTypeFilter =
-				[
-					FilePickerFileTypes.ImageAll
-				],
-			});
-
-			if (files.Count == 1)
-			{
-				await using var stream = await files[0].OpenReadAsync();
-				var resized = _imageProcesor.ResizeImage(stream, 100);
-
-				ShortcutImage = resized;
-			}
-
-			IsEnabled = true;
 		}
 	}
 
@@ -156,18 +118,26 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	[ReactiveCommand]
 	private void ConfirmDeleteShortcut(ShortcutViewModel shortcut)
 	{
-		_shortcutCache.Remove(shortcut);
+		if (_shortcutRepository is not null)
+		{
+			_shortcutRepository.DeleteShortcut(shortcut.Id);
+			_shortcutCache.Remove(shortcut);
+		}
+	}
+
+	[ReactiveCommand]
+	private void RestoreShortcut(ShortcutViewModel shortcut)
+	{
+		if (_shortcutRepository is not null)
+		{
+			_shortcutRepository.RestoreShortcut(shortcut.Id);
+			FilterShortcuts(true);
+		}
 	}
 
 	[ReactiveCommand]
 	private void CancelDeleteShortcut(ShortcutViewModel shortcut)
 	{
 		shortcut.DeleteClicked = false;
-	}
-
-	private void Reset()
-	{
-		Title = Link = string.Empty;
-		ShortcutImage = null;
 	}
 }

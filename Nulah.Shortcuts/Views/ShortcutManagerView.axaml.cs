@@ -2,7 +2,7 @@
 using Avalonia.ReactiveUI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Nulah.Shortcuts.ViewModels;
+using Nulah.Shortcuts.ViewModels.Shortcuts;
 using ReactiveUI;
 
 namespace Nulah.Shortcuts.Views;
@@ -18,7 +18,6 @@ public partial class ShortcutManagerView : ReactiveUserControl<IShortcutManagerV
 	public ShortcutManagerView(ILogger<ShortcutManagerView> logger)
 	{
 		_logger = logger;
-		InitializeComponent();
 		_logger.LogInformation("Shortcut manager view ready");
 
 		this.WhenActivated(disposable =>
@@ -28,6 +27,13 @@ public partial class ShortcutManagerView : ReactiveUserControl<IShortcutManagerV
 					vm => vm.ShortcutListViewModel,
 					view => view.ShortcutList.ViewModel)
 				.DisposeWith(disposable);
+			
+			this.OneWayBind(
+					ViewModel,
+					vm => vm.ShortcutActionViewModel,
+					view => view.ShortcutAction.ViewModel)
+				.DisposeWith(disposable);
 		});
+		InitializeComponent();
 	}
 }

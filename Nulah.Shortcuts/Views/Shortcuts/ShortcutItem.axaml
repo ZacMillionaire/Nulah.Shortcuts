@@ -7,14 +7,21 @@
     </Design.PreviewWith>
 
     <Style Selector="controls|ShortcutItem">
+        <Style Selector="^ TextBlock.IsDeleted">
+            <Setter Property="Foreground" Value="Red" />
+        </Style>
+        <Style Selector="^ > Border">
+            <Setter Property="Background" Value="White" />
+        </Style>
         <!-- Set Defaults -->
         <Setter Property="Title" Value="Shortcut title text asdf asdf wasdf asd" />
         <Setter Property="ShortcutContent">
             <Template>
                 <Panel Background="#E1E1E1">
                     <controls1:ByteArrayImage VerticalAlignment="Center" HorizontalAlignment="Center"
-                                             Width="50" Height="50" />
-                </Panel>            </Template>
+                                              Width="50" Height="50" />
+                </Panel>
+            </Template>
         </Setter>
         <Setter Property="ShortcutActions">
             <Template>
@@ -25,11 +32,12 @@
         </Setter>
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Background="White" CornerRadius="5"
+                <Border CornerRadius="5"
                         BorderBrush="#ededed"
                         BorderThickness="1">
                     <Grid RowDefinitions="40,*,Auto">
                         <TextBlock Grid.Row="0" Text="{TemplateBinding Title}"
+                                   Classes.IsDeleted="{TemplateBinding IsDeleted}"
                                    TextWrapping="WrapWithOverflow"
                                    MaxWidth="150"
                                    TextTrimming="{x:Static TextTrimming.WordEllipsis}"

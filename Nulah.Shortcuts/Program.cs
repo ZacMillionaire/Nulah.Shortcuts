@@ -9,10 +9,14 @@ using Nulah.Shortcuts.Core;
 using Nulah.Shortcuts.Data;
 using Nulah.Shortcuts.Models.Interfaces;
 using Nulah.Shortcuts.ViewModels;
+using Nulah.Shortcuts.ViewModels.RecycleBin;
+using Nulah.Shortcuts.ViewModels.Shortcuts;
 using Nulah.Shortcuts.Views;
+using Nulah.Shortcuts.Views.RecycleBin;
 using Nulah.Shortcuts.Views.Shortcuts;
 using ReactiveUI;
 using Splat;
+using ShortcutListViewModel = Nulah.Shortcuts.ViewModels.Shortcuts.ShortcutListViewModel;
 
 namespace Nulah.Shortcuts;
 
@@ -55,9 +59,13 @@ sealed class Program
 			// View models
 			.AddViewModel<IShortcutListViewModel, ShortcutListViewModel>()
 			.AddViewModel<IShortcutManagerViewModel, ShortcutManagerViewModel>()
+			.AddViewModel<IShortcutCreateEditViewModel, ShortcutCreateEditViewModel>()
+			.AddViewModel<IRecycleBinViewModel, RecycleBinViewModel>()
 			// Views
 			.AddView<ShortcutList, IShortcutListViewModel>()
 			.AddView<ShortcutManagerView, IShortcutManagerViewModel>()
+			.AddView<ShortcutCreateEdit, IShortcutCreateEditViewModel>()
+			.AddView<RecycleBinView, IRecycleBinViewModel>()
 			.AddLogging(builder => builder.AddConsole());
 	}
 
