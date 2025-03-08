@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
@@ -104,7 +105,7 @@ public partial class ShortcutListViewModel : ViewModelBase<IShortcutListViewMode
 	{
 		if (!string.IsNullOrWhiteSpace(shortcut.ShortcutLocation))
 		{
-			//Process.Start("explorer", shortcut.ShortcutLocation);
+			Process.Start("explorer", shortcut.ShortcutLocation);
 			App.GetMainWindow()?.Close();
 		}
 	}

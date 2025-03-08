@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Nulah.Shortcuts.Data\Nulah.Shortcuts.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="SixLabors.ImageSharp" />
+    </ItemGroup>
+
 </Project>

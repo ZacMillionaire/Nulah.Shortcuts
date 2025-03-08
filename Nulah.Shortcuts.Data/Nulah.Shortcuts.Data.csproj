@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Nulah.Shortcuts.Domain\Nulah.Shortcuts.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="sqlite-net-pcl" />
+    </ItemGroup>
+
 </Project>

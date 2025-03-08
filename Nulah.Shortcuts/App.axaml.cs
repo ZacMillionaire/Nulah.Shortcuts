@@ -51,7 +51,9 @@ public class App : Application
 
 		if (!Design.IsDesignMode)
 		{
-			if (Environment.GetEnvironmentVariable("GlobalHooks") == "false")
+			// If we don't have a global hook environment variable, or we do and it's true, enable the 
+			if (Environment.GetEnvironmentVariable("NulahShortcutsGlobalHooks") is null
+			    || Environment.GetEnvironmentVariable("NulahShortcutsGlobalHooks") == "true")
 			{
 				// This will cause things to lag like fuck when you hit a break point so try to avoid having it enabled if possible
 				InitHooks();
